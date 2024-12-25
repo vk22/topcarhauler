@@ -1,0 +1,46 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700;800;900&display=swap');
+
+
+@mixin for-small-phone-only {
+  @media (max-width: 320px) { @content; }
+}
+@mixin for-phone-only {
+  @media (max-width: 599px) { @content; }
+}
+@mixin for-tablet-portrait-up {
+  @media (min-width: 600px) { @content; }
+}
+@mixin for-tablet-landscape-up {
+  @media (min-width: 900px) { @content; }
+}
+@mixin for-desktop-up {
+  @media (min-width: 1200px) { @content; }
+}
+@mixin for-big-desktop-up {
+  @media (min-width: 1800px) { @content; }
+}
+
+@mixin for-700-height-only {
+  @media (max-height: 699px) { @content; }
+}
+@mixin for-800-height-only {
+  @media (max-height: 790px) and (min-height: 700px) { @content; }
+}
+@mixin for-all-height-up {
+  @media (min-height: 800px) { @content; }
+}
+
+
+$font-sans: 'Prompt', sans-serif;
+$font-serif: 'Playfair Display', serif;
+$text-color: #111;
+$text-color-white: #fff;
+$mainColor: #021D40;
+$mainColorHover: #011530; 
+$grey: #9B9B9B;
+$backgroundBlue: #f3f5f9;
+
+@mixin base-transition ($property, $dur: 0.5s, $delay: 0s){
+  transition: $property $dur ease-in-out $delay;
+}

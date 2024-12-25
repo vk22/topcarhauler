@@ -1,0 +1,1 @@
+{"options":{},"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_","ns":"vrv.auths"}],"uuid":"f045fd4e5a8e49b0834ed5d4d4117198"}
