@@ -22,7 +22,9 @@
             {{ item.phone }}
           </div>
           <div class="flex-row" role="cell">
-            {{ item.filename }}
+            <a :href="`/cv/${item.filename}`" target="_blank">
+              {{ item.filename }}
+            </a>
           </div>
           <div class="flex-row" role="cell">
               <v-icon icon="mdi-delete" @click="deleteUser(item)"></v-icon>

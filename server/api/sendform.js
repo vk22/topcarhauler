@@ -1,5 +1,28 @@
 import { User } from "~~/server/models/user-model";
 import { Quote } from "~~/server/models/quote-model";
+import nodemailer from 'nodemailer';
+import { emailTransport, emailFrom } from '~~/server/config/config';
+
+
+const sendEmail = (data) => {
+  const transporter = nodemailer.createTransport(emailTransport);
+  const message = {
+    from: emailFrom,
+    to: 'v.kushnir22@yandex.ru',
+    subject: 'Text Test',
+    text: 'dsdsdsds',
+    html: "<p>" + data.email + "</p>",
+    // attachments: [
+    //   {
+    //     filename: orderFilename + ".pdf",
+    //     path: pdfPath,
+    //   },
+    // ],
+  };
+
+  const sendMailResponse = transporter.sendMail(message);
+  console.log('sendMailResponse ', sendMailResponse)
+}
 
 export default defineEventHandler( async (event) => {
     
@@ -19,6 +42,8 @@ export default defineEventHandler( async (event) => {
         const newUserToDB = new User(body);
         const newUserSave = await newUserToDB.save();
         console.log('newUserSave ', newUserSave)
+        ///
+        sendEmail(body)
         return {
           success: true,
           status: 'success',
