@@ -1,15 +1,13 @@
 import { User } from "~~/server/models/user-model";
 import multer from 'multer';
 import { callNodeListener } from 'h3';
-
-const dir = '/var/www/vrv/www/public/cv'
+const uploadDir = '/var/www/vrv/www/public/cv'
 //const dir = '/Users/viktorkusnir/apps/vrv/public/cv'
-
 
 let originalFileName = '';
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, dir);
+    cb(null, uploadDir);
   },
   filename: (req, file, cbd) => {
     originalFileName = file.originalname;

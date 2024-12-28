@@ -2,13 +2,13 @@
   <div class="content">
     <!-- Top Banner -->
     <section class="about text-r">
-      <div class="col col-img fadeIn-2">
+      <div class="col col-img fadeIn-0">
         <div class="img-wrap">
           <img src="/img/about-1.jpg" alt="">
         </div>
       </div>
       <div class="col col-text">
-        <div class="text-wrap fadeIn-2">
+        <div class="text-wrap fadeIn-1">
           <h2>About us</h2>
           <div class="text-accent">
             <p>

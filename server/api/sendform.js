@@ -1,25 +1,32 @@
 import { User } from "~~/server/models/user-model";
 import { Quote } from "~~/server/models/quote-model";
 import nodemailer from 'nodemailer';
-import { emailTransport, emailFrom } from '~~/server/config/config';
-
+import { emailTransport, emailFrom, emailTo } from '~~/server/config/config';
+const uploadDir = '/var/www/vrv/www/public/cv/'
 
 const sendEmail = (data) => {
   const transporter = nodemailer.createTransport(emailTransport);
+  const html = `<p>Name: ${data.name}</p> 
+                <p>Email: ${data.email}</p> 
+                <p>Phone: ${data.phone}</p>
+                <p>Message: ${data.message}</p>`;
   const message = {
     from: emailFrom,
-    to: 'v.kushnir22@yandex.ru',
-    subject: 'Text Test',
-    text: 'dsdsdsds',
-    html: "<p>" + data.email + "</p>",
-    // attachments: [
-    //   {
-    //     filename: orderFilename + ".pdf",
-    //     path: pdfPath,
-    //   },
-    // ],
+    to: emailTo,
+    subject: 'New Request',
+    text: '',
+    html: html,
   };
 
+  // if (data.filename) {
+  //   message.attachments = [
+  //     {
+  //       filename: data.filename,
+  //       path: `${uploadDir}${data.filename}`,
+  //     },
+  //   ]
+  // }
+  console.log('message ', message)
   const sendMailResponse = transporter.sendMail(message);
   console.log('sendMailResponse ', sendMailResponse)
 }
