@@ -1,8 +1,9 @@
-import { User } from "~~/server/models/user-model";
+
 import multer from 'multer';
 import { callNodeListener } from 'h3';
-const uploadDir = '/var/www/vrv/www/public/cv'
+const uploadDir = useRuntimeConfig().uploadDir
 //const dir = '/Users/viktorkusnir/apps/vrv/public/cv'
+
 
 let originalFileName = '';
 const storage = multer.diskStorage({
@@ -33,7 +34,10 @@ export default defineEventHandler( async (event) => {
     try {
         await callNodeListener(upload.single('file'), event.node.req, event.node.res);
         const path = `/public/cv/${originalFileName}`;
-        return path;
+        return {
+          success: true,
+          path: path
+        };
       } catch (error) {
         console.log(error);
         return createError({

@@ -80,9 +80,12 @@ let checkbox = useField("checkbox");
 const file = useField("file");
 const filename = ref(undefined);
 
+const fileUploadStatus = ref(false);
+const formDataUploadStatus = ref(false);
+
 const schema = {
   name(value) {
-    console.log(' name value ', value)
+    // console.log(' name value ', value)
     if (value?.length >= 2) return true;
     return "Name needs to be at least 2 characters.";
   },
@@ -91,7 +94,7 @@ const schema = {
     return "Phone number needs to be at least 6 digits.";
   },
   checkbox(value) {
-    console.log('checkbox value ', checkbox.value.value)
+    // console.log('checkbox value ', checkbox.value.value)
     if (checkbox.value.value === "1") return true;
     return "Must be checked.";
   },
@@ -108,32 +111,8 @@ const handleFileChange = (fileData) => {
   }
 };
 
-async function onSubmit(values, { resetForm }) {
-  values.mode = props.mode;
-  if (props.mode === "cv-form") {
-    console.log("filename ", filename);
-    values.filename = filename.value;
-  }
-  console.log("values: ", JSON.stringify(values, null, 2));
-  const { data } = await useFetch("/api/sendform", {
-    method: "POST",
-    body: values,
-    headers: { "cache-control": "no-cache" },
-    onResponse: async (context) => {
-      const response = context.response._data
-      console.log("onResponse ", response);
-      console.log("values.filename ", values.filename);
-      if (values.filename) {
-        await handleFileUpload();
-        filename.value = "";
-      }
-      resetForm();
-      afterSubmit(response);
-    },
-  });
-}
 
-function onInvalidSubmit() {
+const onInvalidSubmit = () => {
   const submitBtn = document.querySelector(".submit-btn");
   submitBtn.classList.add("invalid");
   setTimeout(() => {
@@ -141,30 +120,63 @@ function onInvalidSubmit() {
   }, 1000);
 }
 
-const handleFileUpload = async () => {
-  console.log(file);
+const onSubmit = async (values, { resetForm } ) => {
+  values.mode = props.mode;
+  if (props.mode === "cv-form") {
+    console.log("filename ", filename);
+    values.filename = filename.value;
+  }
+  // console.log("values: ", JSON.stringify(values, null, 2));
+
+  /// uploadFile if exist
+  if (values.filename) {
+    const uploadFileRes = await uploadFile();
+    if (uploadFileRes) {
+      filename.value = "";
+      fileUploadStatus.value = true
+    }
+  }
+  /// sendForm
+  const sendFormRes = await sendForm(values)
+  console.log('sendFormRes ', sendFormRes)
+  if (sendFormRes) {
+    filename.value = "";
+    formDataUploadStatus.value = true
+  }
+  if (sendFormRes.success) {
+    afterSubmit(sendFormRes);
+    resetForm();
+  }
+
+}
+
+const sendForm = async (values) => {
+  const { data, status } = await useFetch("/api/sendform", {
+    method: "POST",
+    body: values
+  });
+  return data.value
+}
+
+const uploadFile = async () => {
+  // console.log('file ', file);
   const body = new FormData();
   body.append("file", file.value);
-  await useFetch("/api/uploadfile", {
+  const { data, status } = await useFetch("/api/uploadfile", {
     method: "POST",
-    body: body,
-    onResponse(context) {
-      // this.$refs.form.resetForm();
-      afterSubmit();
-    },
+    body: body
   });
-  return true;
+  return data.value;
 };
 
 const afterSubmit = (response) => {
-  console.log("afterSubmit");
+  // console.log("afterSubmit");
   if (response.success) {
     store.setSendmailResponse({
       status: response.status,
       mode: true,
     });
   }
-
   setTimeout(() => {
     store.setSendmailResponse({
       status: null,

@@ -33,12 +33,10 @@ export default defineNuxtConfig({
     plugins: ["~/server/plugins/mongodb.ts"],
   },
   runtimeConfig: {
-    // mongodbUri
     mongodbUri: 'mongodb://127.0.0.1:27017/vrv',
-
-    // Public keys that are exposed to the client
     public: {
       apiBase: process.env.NUXT_PUBLIC_API_BASE || '/api'
-    }
+    },
+    uploadDir: process.env.UPLOAD_DIR
   }
 })

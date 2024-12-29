@@ -2,14 +2,15 @@ import { User } from "~~/server/models/user-model";
 import { Quote } from "~~/server/models/quote-model";
 import nodemailer from 'nodemailer';
 import { emailTransport, emailFrom, emailTo } from '~~/server/config/config';
-const uploadDir = '/var/www/vrv/www/public/cv/'
+const uploadDir = useRuntimeConfig().uploadDir
 
 const sendEmail = (data) => {
   const transporter = nodemailer.createTransport(emailTransport);
+  const userMessage = data.message ? data.message : ''
   const html = `<p>Name: ${data.name}</p> 
                 <p>Email: ${data.email}</p> 
                 <p>Phone: ${data.phone}</p>
-                <p>Message: ${data.message}</p>`;
+                <p>Message: ${userMessage}</p>`;
   const message = {
     from: emailFrom,
     to: emailTo,
@@ -18,14 +19,14 @@ const sendEmail = (data) => {
     html: html,
   };
 
-  // if (data.filename) {
-  //   message.attachments = [
-  //     {
-  //       filename: data.filename,
-  //       path: `${uploadDir}${data.filename}`,
-  //     },
-  //   ]
-  // }
+  if (data.filename) {
+    message.attachments = [
+      {
+        filename: data.filename,
+        path: `${uploadDir}${data.filename}`,
+      },
+    ]
+  }
   console.log('message ', message)
   const sendMailResponse = transporter.sendMail(message);
   console.log('sendMailResponse ', sendMailResponse)
